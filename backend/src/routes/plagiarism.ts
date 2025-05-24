@@ -39,7 +39,7 @@ function simulatePlagiarismCheck(content: string) {
   };
 }
 
-router.post('/check', async (req: AuthRequest, res) => {
+router.post('/check', async (req: AuthRequest, res): Promise<any> => {
   try {
     const { documentId } = CheckPlagiarismSchema.parse(req.body);
 
@@ -69,7 +69,7 @@ router.post('/check', async (req: AuthRequest, res) => {
       data: { lastChecked: new Date() }
     });
 
-    res.json({
+    return res.json({
       id: check.id,
       originalityScore: check.originalityScore,
       report: check.report,
@@ -79,11 +79,11 @@ router.post('/check', async (req: AuthRequest, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to check plagiarism' });
+    return res.status(500).json({ error: 'Failed to check plagiarism' });
   }
 });
 
-router.get('/history/:documentId', async (req: AuthRequest, res) => {
+router.get('/history/:documentId', async (req: AuthRequest, res): Promise<any> => {
   try {
     const document = await prisma.document.findFirst({
       where: {
@@ -106,13 +106,13 @@ router.get('/history/:documentId', async (req: AuthRequest, res) => {
       }
     });
 
-    res.json(checks);
+    return res.json(checks);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch check history' });
+    return res.status(500).json({ error: 'Failed to fetch check history' });
   }
 });
 
-router.get('/report/:checkId', async (req: AuthRequest, res) => {
+router.get('/report/:checkId', async (req: AuthRequest, res): Promise<any> => {
   try {
     const check = await prisma.plagiarismCheck.findUnique({
       where: { id: req.params.checkId },
@@ -130,7 +130,7 @@ router.get('/report/:checkId', async (req: AuthRequest, res) => {
       return res.status(404).json({ error: 'Report not found' });
     }
 
-    res.json({
+    return res.json({
       id: check.id,
       documentTitle: check.document.title,
       originalityScore: check.originalityScore,
@@ -138,7 +138,7 @@ router.get('/report/:checkId', async (req: AuthRequest, res) => {
       checkedAt: check.checkedAt
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch report' });
+    return res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
 

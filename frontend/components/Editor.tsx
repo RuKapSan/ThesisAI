@@ -57,43 +57,43 @@ export default function Editor({ content, onChange }: EditorProps) {
   const addLink = () => {
     const url = window.prompt('Введите URL:')
     if (url) {
-      editor.chain().focus().setLink({ href: url }).run()
+      ;(editor.commands as any).setLink({ href: url })
     }
   }
 
   const addImage = () => {
     const url = window.prompt('Введите URL изображения:')
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
+      ;(editor.commands as any).setImage({ src: url })
     }
   }
 
   const addTable = () => {
-    editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+    ;(editor.commands as any).insertTable({ rows: 3, cols: 3, withHeaderRow: true })
   }
 
   const toolbarButtons = [
     {
       icon: FiBold,
-      action: () => editor.chain().focus().toggleBold().run(),
+      action: () => (editor as any).commands.toggleBold(),
       isActive: editor.isActive('bold'),
       tooltip: 'Жирный'
     },
     {
       icon: FiItalic,
-      action: () => editor.chain().focus().toggleItalic().run(),
+      action: () => (editor as any).commands.toggleItalic(),
       isActive: editor.isActive('italic'),
       tooltip: 'Курсив'
     },
     {
       icon: FiCode,
-      action: () => editor.chain().focus().toggleCode().run(),
+      action: () => (editor as any).commands.toggleCode(),
       isActive: editor.isActive('code'),
       tooltip: 'Код'
     },
     {
       icon: FiList,
-      action: () => editor.chain().focus().toggleBulletList().run(),
+      action: () => (editor as any).commands.toggleBulletList(),
       isActive: editor.isActive('bulletList'),
       tooltip: 'Список'
     },
@@ -139,9 +139,9 @@ export default function Editor({ content, onChange }: EditorProps) {
           onChange={(e) => {
             const level = parseInt(e.target.value)
             if (level === 0) {
-              editor.chain().focus().setParagraph().run()
+              ;(editor as any).commands.setParagraph()
             } else {
-              editor.chain().focus().toggleHeading({ level: level as any }).run()
+              ;(editor as any).commands.toggleHeading({ level: level as any })
             }
           }}
           className="bg-secondary text-white px-3 py-1.5 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary"

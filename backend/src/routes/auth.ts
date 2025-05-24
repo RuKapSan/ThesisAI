@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
@@ -18,7 +18,7 @@ const LoginSchema = z.object({
   password: z.string()
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res): Promise<any> => {
   try {
     const { email, password, name } = RegisterSchema.parse(req.body);
 
@@ -42,11 +42,11 @@ router.post('/register', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRE || '7d' }
+      process.env.JWT_SECRET as string,
+      { expiresIn: process.env.JWT_EXPIRE || '7d' } as SignOptions
     );
 
-    res.json({
+    return res.json({
       token,
       user: {
         id: user.id,
@@ -59,11 +59,11 @@ router.post('/register', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res): Promise<any> => {
   try {
     const { email, password } = LoginSchema.parse(req.body);
 
@@ -83,11 +83,11 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRE || '7d' }
+      process.env.JWT_SECRET as string,
+      { expiresIn: process.env.JWT_EXPIRE || '7d' } as SignOptions
     );
 
-    res.json({
+    return res.json({
       token,
       user: {
         id: user.id,
@@ -100,7 +100,7 @@ router.post('/login', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 

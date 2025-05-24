@@ -19,7 +19,7 @@ const UpdateDocumentSchema = z.object({
 
 router.use(authenticate);
 
-router.get('/', async (req: AuthRequest, res) => {
+router.get('/', async (req: AuthRequest, res): Promise<any> => {
   try {
     const documents = await prisma.document.findMany({
       where: { userId: req.userId },
@@ -33,13 +33,13 @@ router.get('/', async (req: AuthRequest, res) => {
       }
     });
 
-    res.json(documents);
+    return res.json(documents);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch documents' });
+    return res.status(500).json({ error: 'Failed to fetch documents' });
   }
 });
 
-router.get('/:id', async (req: AuthRequest, res) => {
+router.get('/:id', async (req: AuthRequest, res): Promise<any> => {
   try {
     const document = await prisma.document.findFirst({
       where: {
@@ -58,13 +58,13 @@ router.get('/:id', async (req: AuthRequest, res) => {
       return res.status(404).json({ error: 'Document not found' });
     }
 
-    res.json(document);
+    return res.json(document);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch document' });
+    return res.status(500).json({ error: 'Failed to fetch document' });
   }
 });
 
-router.post('/', async (req: AuthRequest, res) => {
+router.post('/', async (req: AuthRequest, res): Promise<any> => {
   try {
     const data = CreateDocumentSchema.parse(req.body);
 
@@ -83,16 +83,16 @@ router.post('/', async (req: AuthRequest, res) => {
       }
     });
 
-    res.json(document);
+    return res.json(document);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to create document' });
+    return res.status(500).json({ error: 'Failed to create document' });
   }
 });
 
-router.put('/:id', async (req: AuthRequest, res) => {
+router.put('/:id', async (req: AuthRequest, res): Promise<any> => {
   try {
     const data = UpdateDocumentSchema.parse(req.body);
 
@@ -127,16 +127,16 @@ router.put('/:id', async (req: AuthRequest, res) => {
       });
     }
 
-    res.json(updatedDocument);
+    return res.json(updatedDocument);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to update document' });
+    return res.status(500).json({ error: 'Failed to update document' });
   }
 });
 
-router.delete('/:id', async (req: AuthRequest, res) => {
+router.delete('/:id', async (req: AuthRequest, res): Promise<any> => {
   try {
     const document = await prisma.document.findFirst({
       where: {
@@ -153,9 +153,9 @@ router.delete('/:id', async (req: AuthRequest, res) => {
       where: { id: req.params.id }
     });
 
-    res.json({ message: 'Document deleted successfully' });
+    return res.json({ message: 'Document deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete document' });
+    return res.status(500).json({ error: 'Failed to delete document' });
   }
 });
 

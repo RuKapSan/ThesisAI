@@ -26,7 +26,7 @@ const SourcesSchema = z.object({
 
 router.use(authenticate);
 
-router.post('/check', async (req: AuthRequest, res) => {
+router.post('/check', async (req: AuthRequest, res): Promise<any> => {
   try {
     const { text, type } = CheckTextSchema.parse(req.body);
 
@@ -53,7 +53,7 @@ router.post('/check', async (req: AuthRequest, res) => {
       max_tokens: 1000
     });
 
-    res.json({
+    return res.json({
       type,
       feedback: completion.choices[0].message.content
     });
@@ -61,11 +61,11 @@ router.post('/check', async (req: AuthRequest, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to check text' });
+    return res.status(500).json({ error: 'Failed to check text' });
   }
 });
 
-router.post('/generate', async (req: AuthRequest, res) => {
+router.post('/generate', async (req: AuthRequest, res): Promise<any> => {
   try {
     const { prompt, context, type } = GenerateSchema.parse(req.body);
 
@@ -93,7 +93,7 @@ router.post('/generate', async (req: AuthRequest, res) => {
       max_tokens: 1500
     });
 
-    res.json({
+    return res.json({
       type,
       generated: completion.choices[0].message.content
     });
@@ -101,11 +101,11 @@ router.post('/generate', async (req: AuthRequest, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to generate content' });
+    return res.status(500).json({ error: 'Failed to generate content' });
   }
 });
 
-router.post('/sources', async (req: AuthRequest, res) => {
+router.post('/sources', async (req: AuthRequest, res): Promise<any> => {
   try {
     const { topic, count } = SourcesSchema.parse(req.body);
 
@@ -125,7 +125,7 @@ router.post('/sources', async (req: AuthRequest, res) => {
       max_tokens: 1500
     });
 
-    res.json({
+    return res.json({
       topic,
       sources: completion.choices[0].message.content
     });
@@ -133,11 +133,11 @@ router.post('/sources', async (req: AuthRequest, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to find sources' });
+    return res.status(500).json({ error: 'Failed to find sources' });
   }
 });
 
-router.post('/analyze-structure', async (req: AuthRequest, res) => {
+router.post('/analyze-structure', async (req: AuthRequest, res): Promise<any> => {
   try {
     const { content } = z.object({ content: z.string() }).parse(req.body);
 
@@ -157,14 +157,14 @@ router.post('/analyze-structure', async (req: AuthRequest, res) => {
       max_tokens: 1000
     });
 
-    res.json({
+    return res.json({
       analysis: completion.choices[0].message.content
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors });
     }
-    res.status(500).json({ error: 'Failed to analyze structure' });
+    return res.status(500).json({ error: 'Failed to analyze structure' });
   }
 });
 
