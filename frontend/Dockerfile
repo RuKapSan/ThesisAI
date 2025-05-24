@@ -13,6 +13,11 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# IMPORTANT: Set build-time environment variable
+# This needs to be set before build for Next.js to embed it
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Build the application
 RUN npm run build
 
