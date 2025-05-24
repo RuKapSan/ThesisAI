@@ -10,6 +10,16 @@ AI-powered web service for writing and editing academic papers with intelligent 
 - **Document Management**: Organize and track your academic papers
 - **Export Options**: Export to PDF, DOCX, and other formats
 
+## Documentation
+
+- [Quick Start Guide](docs/QUICK_START.md)
+- [User Guide](docs/USER_GUIDE.md)
+- [API Reference](docs/API_REFERENCE.md)
+- [Testing Guide](docs/TESTING.md)
+- [Database Setup](docs/DATABASE_SETUP.md)
+- [Docker Setup](docs/DOCKER_SETUP.md)
+- [Full Documentation](docs/DOCUMENTATION.md)
+
 ## Tech Stack
 
 ### Frontend

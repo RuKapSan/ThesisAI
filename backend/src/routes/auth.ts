@@ -7,6 +7,11 @@ import { z } from 'zod';
 const router = Router();
 const prisma = new PrismaClient();
 
+// Check for required environment variables
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is not set in environment variables');
+}
+
 const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),

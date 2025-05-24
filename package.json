@@ -15,7 +15,7 @@
     "build:backend": "npm run build --workspace=backend",
     "build:frontend": "npm run build --workspace=frontend",
     "build:all": "npm run build:backend && npm run build:frontend",
-    "start": "node railway-start.js",
+    "start": "./scripts/deployment/start.sh",
     "start:local": "cd backend && npx prisma migrate deploy && npm start",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",

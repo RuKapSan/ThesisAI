@@ -8,7 +8,7 @@
 
 1. **Run the setup script:**
    ```bash
-   ./docker-setup.sh
+   ./scripts/docker-setup.sh
    ```
 
 2. **Update environment variables:**

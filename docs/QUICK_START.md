@@ -9,7 +9,7 @@
 
 2. **Deploy to Railway**
    ```bash
-   ./deploy.sh
+   ./scripts/deployment/deploy.sh
    ```
 
 3. **Configure Environment Variables in Railway Dashboard**
@@ -21,7 +21,7 @@
 
 1. **Quick Start**
    ```bash
-   ./start-dev.sh
+   ./scripts/start-dev.sh
    ```
 
 2. **Manual Setup**
