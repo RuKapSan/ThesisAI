@@ -3,7 +3,14 @@
 ## What was fixed:
 1. Created a new Dockerfile in `/frontend` that works when Railway uses `/frontend` as root directory
 2. Added `railway.json` configuration for the frontend service
-3. The original Dockerfile was renamed to `Dockerfile.from-root` (for reference)
+3. Fixed COPY paths to match Next.js standalone build output structure
+4. Handle empty public folder case by creating it
+
+## Latest Fix (Build Error):
+- Next.js standalone mode creates files at `.next/standalone/frontend/`
+- Adjusted COPY commands to match this structure
+- Fixed server.js path to `frontend/server.js`
+- Created public directory to avoid COPY failures
 
 ## Next steps for Railway:
 1. Go to your Railway project

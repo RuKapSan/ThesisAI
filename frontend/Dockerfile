@@ -16,9 +16,6 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Build the application
 RUN npm run build
 
-# Check what exists after build
-RUN ls -la .next/standalone/
-
 FROM node:18-alpine AS runner
 
 WORKDIR /app
@@ -29,14 +26,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy the standalone build output
+# Copy the standalone server files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
-# Copy static files
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./frontend/.next/static
+# Copy static files to correct location
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Create public directory in the right place
-RUN mkdir -p ./frontend/public
+# Create public directory
+RUN mkdir -p ./public
 
 USER nextjs
 
@@ -44,4 +41,5 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["node", "frontend/server.js"]
+# Run server.js from root
+CMD ["node", "server.js"]
