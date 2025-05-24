@@ -32,16 +32,31 @@ migrate.on('close', (code) => {
     process.exit(code);
   }
 
-  // Start the server
-  console.log('\nStarting backend server...');
-  const server = spawn('npm', ['start'], {
+  // Generate Prisma client
+  console.log('\nGenerating Prisma client...');
+  const generate = spawn('npx', ['prisma', 'generate'], {
     cwd: backendDir,
     stdio: 'inherit',
     env: { ...process.env }
   });
 
-  server.on('close', (code) => {
-    console.log('Server exited with code', code);
-    process.exit(code);
+  generate.on('close', (code) => {
+    if (code !== 0) {
+      console.error('Prisma generate failed with code', code);
+      process.exit(code);
+    }
+
+    // Start the server
+    console.log('\nStarting backend server...');
+    const server = spawn('npm', ['start'], {
+      cwd: backendDir,
+      stdio: 'inherit',
+      env: { ...process.env }
+    });
+
+    server.on('close', (code) => {
+      console.log('Server exited with code', code);
+      process.exit(code);
+    });
   });
 });
