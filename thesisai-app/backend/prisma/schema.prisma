@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents    Document[]
+  subscription Subscription?
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  type        DocType
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  isPublic    Boolean  @default(false)
+  lastChecked DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  versions DocumentVersion[]
+  checks   PlagiarismCheck[]
+}
+
+model DocumentVersion {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  content    String   @db.Text
+  version    Int
+  createdAt  DateTime @default(now())
+}
+
+model PlagiarismCheck {
+  id             String   @id @default(uuid())
+  documentId     String
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  originalityScore Float
+  report         Json
+  checkedAt      DateTime @default(now())
+}
+
+model Subscription {
+  id        String           @id @default(uuid())
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id])
+  plan      SubscriptionPlan
+  status    String
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum DocType {
+  COURSEWORK
+  THESIS
+  ESSAY
+  REPORT
+  ARTICLE
+}
+
+enum SubscriptionPlan {
+  FREE
+  STUDENT
+  PRO
+}

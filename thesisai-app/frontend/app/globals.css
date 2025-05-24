@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --card: #141414;
+    --card-foreground: #ffffff;
+    --primary: #7c3aed;
+    --primary-foreground: #ffffff;
+    --secondary: #1e1e1e;
+    --secondary-foreground: #ffffff;
+    --muted: #6b7280;
+    --muted-foreground: #9ca3af;
+    --accent: #7c3aed;
+    --accent-foreground: #ffffff;
+    --border: #2a2a2a;
+    --input: #1e1e1e;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary/80 text-white px-4 py-2 rounded-md transition-all duration-200 font-medium border border-border;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-secondary/50 text-muted hover:text-white px-4 py-2 rounded-md transition-all duration-200;
+  }
+
+  .input {
+    @apply bg-input border border-border rounded-md px-4 py-2 focus:outline-none focus:border-primary transition-colors text-white placeholder-muted;
+  }
+
+  .card {
+    @apply bg-card rounded-lg border border-border p-6;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-md text-muted hover:text-white hover:bg-secondary/50 transition-all duration-200 cursor-pointer;
+  }
+
+  .sidebar-item.active {
+    @apply text-white bg-primary/20 hover:bg-primary/30;
+  }
+
+  .progress-bar {
+    @apply h-2 bg-secondary rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-primary transition-all duration-500 ease-out;
+  }
+}
+
+.tiptap {
+  @apply min-h-[500px] p-8 focus:outline-none text-foreground;
+}
+
+.tiptap p {
+  @apply mb-4 leading-relaxed;
+}
+
+.tiptap h1 {
+  @apply text-3xl font-bold mb-4 text-white;
+}
+
+.tiptap h2 {
+  @apply text-2xl font-bold mb-3 text-white;
+}
+
+.tiptap h3 {
+  @apply text-xl font-bold mb-2 text-white;
+}
+
+.tiptap ul {
+  @apply list-disc list-inside mb-4 ml-4;
+}
+
+.tiptap ol {
+  @apply list-decimal list-inside mb-4 ml-4;
+}
+
+.tiptap code {
+  @apply bg-secondary px-1 py-0.5 rounded text-sm font-mono text-primary;
+}
+
+.tiptap pre {
+  @apply bg-secondary p-4 rounded-lg mb-4 overflow-x-auto;
+}
+
+.tiptap blockquote {
+  @apply border-l-4 border-primary pl-4 italic mb-4 text-muted;
+}
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted/50;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
