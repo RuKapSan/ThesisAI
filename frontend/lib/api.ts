@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { useAuthStore } from './store'
 
+// Normalize the API URL by removing trailing slash
+const baseURL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api').replace(/\/$/, '')
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+  baseURL,
 })
 
 api.interceptors.request.use((config) => {

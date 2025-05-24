@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useAuthStore } from '@/lib/store'
 
@@ -29,14 +29,11 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        }
-      )
+      const response = await api.post('/auth/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })
       
       login(response.data.token, response.data.user)
       toast.success('Account created successfully!')

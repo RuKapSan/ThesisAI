@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useAuthStore } from '@/lib/store'
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi'
@@ -22,10 +22,7 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        formData
-      )
+      const response = await api.post('/auth/login', formData)
       
       login(response.data.token, response.data.user)
       toast.success('Добро пожаловать!')
