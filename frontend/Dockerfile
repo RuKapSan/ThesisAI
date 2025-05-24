@@ -2,20 +2,18 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy root package files for workspace setup
+# Copy package files
 COPY package*.json ./
-COPY frontend/package.json ./frontend/
 
-# Install all dependencies (workspace-aware)
+# Install dependencies
 RUN npm install
 
-# Copy frontend source
-COPY frontend ./frontend/
-
-WORKDIR /app/frontend
+# Copy source code
+COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Build the application
 RUN npm run build
 
 FROM node:18-alpine AS runner
@@ -28,9 +26,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/frontend/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./.next/static
+# Copy necessary files from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
@@ -38,4 +37,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["node", "frontend/server.js"]
+CMD ["node", "server.js"]

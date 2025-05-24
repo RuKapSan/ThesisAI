@@ -12,7 +12,7 @@ The frontend is currently not being deployed because Railway needs separate serv
    - Go to your Railway project dashboard
    - Click "New Service" → "GitHub Repo"
    - Select the same repository
-   - Set the root directory to `/frontend`
+   - **IMPORTANT**: Set the root directory to `/frontend`
 
 2. **Configure the frontend service**:
    - Add these environment variables:
@@ -22,13 +22,10 @@ The frontend is currently not being deployed because Railway needs separate serv
      ```
    - Replace `your-backend-service` with your actual backend service URL
 
-3. **Update the frontend build command** (if needed):
-   ```json
-   {
-     "buildCommand": "npm install && npm run build",
-     "startCommand": "npm start"
-   }
-   ```
+3. **The frontend now has a standalone Dockerfile**:
+   - `Dockerfile.standalone` is configured to work with Railway's `/frontend` root directory
+   - The `railway.json` in the frontend directory specifies to use this Dockerfile
+   - No additional build configuration needed
 
 ## Alternative: Single Service Deployment
 
