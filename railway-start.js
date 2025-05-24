@@ -17,6 +17,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 const backendDir = path.join(__dirname, 'backend');
+const frontendDir = path.join(__dirname, 'frontend');
 
 // Run migrations first
 console.log('\nRunning database migrations...');
@@ -46,17 +47,62 @@ migrate.on('close', (code) => {
       process.exit(code);
     }
 
-    // Start the server
+    // Start the backend server
     console.log('\nStarting backend server...');
-    const server = spawn('npm', ['start'], {
+    const backendServer = spawn('npm', ['start'], {
       cwd: backendDir,
       stdio: 'inherit',
       env: { ...process.env }
     });
 
-    server.on('close', (code) => {
-      console.log('Server exited with code', code);
-      process.exit(code);
+    // Build and start the frontend
+    console.log('\nBuilding frontend...');
+    const frontendBuild = spawn('npm', ['run', 'build'], {
+      cwd: frontendDir,
+      stdio: 'inherit',
+      env: { 
+        ...process.env,
+        NEXT_PUBLIC_API_URL: process.env.BACKEND_URL || 'http://localhost:8080/api'
+      }
+    });
+
+    frontendBuild.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Frontend build failed with code', code);
+        backendServer.kill();
+        process.exit(code);
+      }
+
+      console.log('\nStarting frontend server...');
+      const frontendServer = spawn('npm', ['start'], {
+        cwd: frontendDir,
+        stdio: 'inherit',
+        env: { 
+          ...process.env,
+          PORT: process.env.FRONTEND_PORT || '3000',
+          NEXT_PUBLIC_API_URL: process.env.BACKEND_URL || 'http://localhost:8080/api'
+        }
+      });
+
+      // Handle process termination
+      process.on('SIGINT', () => {
+        console.log('\nShutting down...');
+        backendServer.kill();
+        frontendServer.kill();
+        process.exit(0);
+      });
+
+      backendServer.on('close', (code) => {
+        console.log('Backend server exited with code', code);
+        frontendServer.kill();
+        process.exit(code);
+      });
+
+      frontendServer.on('close', (code) => {
+        console.log('Frontend server exited with code', code);
+        backendServer.kill();
+        process.exit(code);
+      });
     });
   });
 });
