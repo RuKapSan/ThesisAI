@@ -55,25 +55,46 @@ AI-powered web service for writing and editing academic papers with intelligent 
 
 ## Railway Deployment
 
+### Important: Add Database Services First!
+
 1. Create a new project on [Railway](https://railway.app)
 
-2. Add PostgreSQL and Redis services from the Railway dashboard
+2. **Add Database Services (Required):**
+   - Click "New Service" → "Database" → "Add PostgreSQL"
+   - Click "New Service" → "Database" → "Add Redis"
+   - Wait for both services to deploy
 
-3. Deploy using Railway CLI:
+3. **Deploy the Application:**
+   - Click "New Service" → "GitHub Repo"
+   - Select your repository
+   - Railway will auto-detect the nixpacks.toml configuration
+
+4. **Configure Environment Variables:**
+   In the service settings, set these variables:
+   ```
+   DATABASE_URL=${{Postgres.DATABASE_URL}}
+   REDIS_URL=${{Redis.REDIS_URL}}
+   JWT_SECRET=your-secure-random-string
+   JWT_EXPIRE=7d
+   OPENAI_API_KEY=sk-your-openai-key
+   NODE_ENV=production
+   ```
+
+5. **Using Railway CLI (Alternative):**
    ```bash
    railway login
    railway link
    railway up
    ```
 
-4. Set environment variables in Railway dashboard:
-   - `DATABASE_URL` (automatically set by Railway PostgreSQL)
-   - `REDIS_URL` (automatically set by Railway Redis)
-   - `OPENAI_API_KEY` (your OpenAI API key)
-   - `JWT_SECRET` (generate a secure random string)
-   - `NEXT_PUBLIC_API_URL` (your backend URL)
+6. The app will deploy automatically and be available at your Railway domain
 
-5. The app will be available at your Railway domain
+### Troubleshooting
+
+If you see "Environment variable not found: DATABASE_URL":
+- Make sure you added PostgreSQL service to your Railway project
+- Verify `DATABASE_URL` is set to `${{Postgres.DATABASE_URL}}`
+- Check that the PostgreSQL service is running
 
 ## Docker Deployment
 
