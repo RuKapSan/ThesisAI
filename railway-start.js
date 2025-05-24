@@ -9,6 +9,7 @@ console.log('- DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 console.log('- REDIS_URL:', process.env.REDIS_URL ? 'Set' : 'Not set');
 console.log('- JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Not set');
 console.log('- OPENAI_API_KEY:', process.env.OPENAI_API_KEY ? 'Set' : 'Not set');
+console.log('- FRONTEND_URL:', process.env.FRONTEND_URL ? 'Set' : 'Not set');
 
 if (!process.env.DATABASE_URL) {
   console.error('ERROR: DATABASE_URL is not set!');
